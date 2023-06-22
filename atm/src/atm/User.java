@@ -82,14 +82,17 @@ public class User {
 
 	@Override
 	public String toString() {
+		// 회원 정보 출력
+		// 이름(코드) : 아이디/비밀번호
 		String str = String.format("%s(%d) : %s/%s", this.name, this.userCode, this.id, this.password);
+		// 계좌 상황
 		for (int i = 0; i < this.accs.size(); i++) {
 			str += "\n" + this.accs.get(i);
 		}
 		return str;
 	}
 
-	/* 
+	/* toString()
 	 * name(userCode) : id/password
 	 * ㄴ accNumber1(password) : balance1
 	 * ㄴ accNumber2(password) : balance2

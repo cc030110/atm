@@ -9,19 +9,19 @@ import java.util.Scanner;
  * */
 
 public class Atm {
-	private final int JOIN = 1;
-	private final int LEAVE = 2;
-	private final int LOGIN = 3;
-	private final int LOGOUT = 4;
-	private final int CREATE_ACC = 5;
-	private final int DELETE_ACC =  6;
-	private final int VIEW_BALANCE = 7;
-	private final int INPUT_MONEY = 8;
-	private final int OUT_MONEY = 9;
-	private final int MOVE_MONEY = 10;
-	private final int SAVE_FILE = 11;
-	private final int LOAD_FILE = 12;
-	private final int QUIT = 13;
+	private final int JOIN = 1;				// 회원 - 가입
+	private final int LEAVE = 2;			// 회원 - 탈퇴
+	private final int LOGIN = 3;			// 회원 - 로그인
+	private final int LOGOUT = 4;			// 회원 - 로그아웃
+	private final int CREATE_ACC = 5;		// 계좌 - 계약
+	private final int DELETE_ACC =  6;		// 계좌 - 철회
+	private final int VIEW_BALANCE = 7;		// 계좌 - 조회
+	private final int INPUT_MONEY = 8;		// 뱅킹 - 입금
+	private final int OUT_MONEY = 9;		// 뱅킹 - 인출
+	private final int MOVE_MONEY = 10;		// 뱅킹 - 이체
+	private final int SAVE_FILE = 11;		// 파일 - 저장
+	private final int LOAD_FILE = 12;		// 파일 - 로드
+	private final int QUIT = 13;			// 종료
 	
 	public static final Scanner scanner = new Scanner(System.in);
 	
@@ -33,7 +33,6 @@ public class Atm {
 	
 	public Atm(String brandName) {
 		this.brandName = brandName;
-		
 		this.userManager = UserManager.getInstance();
 		this.accManager = AccountManager.getInstance();
 		this.fileManager = FileManager.getInstance();
@@ -71,10 +70,9 @@ public class Atm {
 	
 	private void printAlldata() {
 		// 동일한 주소 참조값을 주지 않도록 해야함
-		for(User user : userManager.getList())
-			System.out.println(user);
+		for(User user : userManager.getList()) // getList() <- 클론 생성하여 보여줌
+			System.out.println(user); // 각 user는 User 클래스의 오버라이드 된 toString()으로 출력
 	}
-	
 	
 	public void run() {
 		while(true) {
@@ -83,12 +81,12 @@ public class Atm {
 			int select = inputNumber("메뉴");
 			if(select == JOIN)
 				userManager.joinUser();
-//			else if(select == LEAVE)
-//				userManager.leaveUser();
-//			else if(select == LOGIN)
-//				userManager.loginUser();
-//			else if(select == LOGOUT)
-//				userManager.logoutUser();
+			else if(select == LEAVE)
+				userManager.leaveUser();
+			else if(select == LOGIN)
+				userManager.loginUser();
+			else if(select == LOGOUT)
+				userManager.logoutUser();
 //			else if(select == CREATE_ACC)
 //				accManager.createAccount();
 //			else if(select == DELETE_ACC)
@@ -107,8 +105,9 @@ public class Atm {
 //				loadFile();
 			else if(select == QUIT)
 				break;
-				
 		}
-	}
+		scanner.close();
+	} // run()
+	
 	
 }
