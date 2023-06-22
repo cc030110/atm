@@ -89,24 +89,38 @@ public class Atm {
 		System.out.println();
 
 	}
-
+	
+	private boolean loginCheck() {
+		if(userManager.isLogin(this.log))
+			return true;
+		return false;
+	}
+	
 	public void run() {
 		while(true) {
 			printAlldata();	// 검토용
 			printMenu();
 			int select = inputNumber("메뉴");
-			if(select == JOIN)
+			if (select == JOIN) {
 				userManager.joinUser();
-			else if(select == LEAVE)
+			} else if (select == LEAVE) {
 				this.log = userManager.leaveUser(this.log);
-			else if(select == LOGIN)
+			} else if (select == LOGIN) {
 				this.log = userManager.loginUser(this.log);
-			else if(select == LOGOUT)
+			} else if (select == LOGOUT) {
 				this.log = userManager.logoutUser();
-			else if(select == CREATE_ACC)
-				accManager.createAccount(userManager.getUserByUserCode(this.log));
-			else if(select == DELETE_ACC)
-				accManager.deleteAcc(this.log);
+			} else if (select == CREATE_ACC) {
+				if (loginCheck()) {
+					accManager.createAccount(userManager.getUserByUserCode(this.log));
+				} else {
+
+				}
+			} else if (select == DELETE_ACC) {
+				if (loginCheck()) {
+					accManager.deleteAcc(this.log);
+				}
+
+			}
 //			else if(select == VIEW_BALANCE)
 //				accManager.viewBalance();
 //			else if(select == INPUT_MONEY)
