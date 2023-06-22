@@ -2,8 +2,8 @@ package atm;
 
 import java.util.ArrayList;
 
+// 유저코드, 이름, 아이디, 비밀번호, 나이, 계좌목록
 //R - 필수 / U - 수정가능
-
 public class User {
 	private int userCode;			 // R
 	private String name;			 // R

@@ -1,7 +1,7 @@
 package atm;
 
+// 유저코드, 계좌번호, 계좌비밀번호, 금액
 // R - 필수 / U - 수정가능
-
 public class Account {
 	private int userCode; 		// R
 	private int accNumber; 		// R

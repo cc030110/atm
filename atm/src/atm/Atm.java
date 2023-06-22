@@ -13,7 +13,7 @@ public class Atm {
 	private final int LEAVE = 2;			// 회원 - 탈퇴
 	private final int LOGIN = 3;			// 회원 - 로그인
 	private final int LOGOUT = 4;			// 회원 - 로그아웃
-	private final int CREATE_ACC = 5;		// 계좌 - 계약
+	private final int CREATE_ACC = 5;		// 계좌 - 계약(개설)
 	private final int DELETE_ACC =  6;		// 계좌 - 철회
 	private final int VIEW_BALANCE = 7;		// 계좌 - 조회
 	private final int INPUT_MONEY = 8;		// 뱅킹 - 입금
@@ -26,6 +26,7 @@ public class Atm {
 	public static final Scanner scanner = new Scanner(System.in);
 	
 	private String brandName;
+	private int log; // 로그인 중인 userCode(로그아웃 시 기본 0)
 	
 	private UserManager userManager;
 	private AccountManager accManager;
@@ -36,10 +37,11 @@ public class Atm {
 		this.userManager = UserManager.getInstance();
 		this.accManager = AccountManager.getInstance();
 		this.fileManager = FileManager.getInstance();
+		this.log=0;
 	}
 	
 	private void printMenu() {
-		System.out.printf(" --- %s BANK ---\n", this.brandName);
+		System.out.printf("== %s BANK ==\n", this.brandName);
 		System.out.println("1. 회원가입");
 		System.out.println("2. 회원탈퇴");
 		System.out.println("3. 로그인");
@@ -54,11 +56,11 @@ public class Atm {
 		System.out.println("12. 로드");
 		System.out.println("13. 종료");
 	}
-	
-	private int inputNumber(String msg) {
+
+	public static int inputNumber(String msg) {
 		System.out.print(msg + " : ");
-		String input = this.scanner.next();
-		
+		String input = Atm.scanner.next();
+
 		int number = -1;
 		try {
 			number = Integer.parseInt(input);
@@ -67,13 +69,27 @@ public class Atm {
 		}
 		return number;
 	}
-	
+
 	private void printAlldata() {
 		// 동일한 주소 참조값을 주지 않도록 해야함
-		for(User user : userManager.getList()) // getList() <- 클론 생성하여 보여줌
-			System.out.println(user); // 각 user는 User 클래스의 오버라이드 된 toString()으로 출력
+		System.out.println("[User List]");
+		if(!userManager.getList().isEmpty()) {
+			for (User user : userManager.getList()) // getList() <- 클론 생성하여 보여줌
+				System.out.println(user); // 각 user는 User 클래스의 오버라이드 된 toString()으로 출력
+		}else {
+			System.out.println("(유저정보 없음)");
+		}
+		System.out.println("[Account List]");
+		if(!accManager.getList().isEmpty()) {
+			for (Account acc : accManager.getList())
+				System.out.println(acc);
+		}else {
+			System.out.println("(계좌정보 없음)");
+		}
+		System.out.println();
+
 	}
-	
+
 	public void run() {
 		while(true) {
 			printAlldata();	// 검토용
@@ -82,15 +98,15 @@ public class Atm {
 			if(select == JOIN)
 				userManager.joinUser();
 			else if(select == LEAVE)
-				userManager.leaveUser();
+				this.log = userManager.leaveUser(this.log);
 			else if(select == LOGIN)
-				userManager.loginUser();
+				this.log = userManager.loginUser(this.log);
 			else if(select == LOGOUT)
-				userManager.logoutUser();
-//			else if(select == CREATE_ACC)
-//				accManager.createAccount();
-//			else if(select == DELETE_ACC)
-//				accManager.deleteAcc();
+				this.log = userManager.logoutUser();
+			else if(select == CREATE_ACC)
+				accManager.createAccount(userManager.getUserByUserCode(this.log));
+			else if(select == DELETE_ACC)
+				accManager.deleteAcc(this.log);
 //			else if(select == VIEW_BALANCE)
 //				accManager.viewBalance();
 //			else if(select == INPUT_MONEY)
@@ -105,6 +121,7 @@ public class Atm {
 //				loadFile();
 			else if(select == QUIT)
 				break;
+			System.out.println();
 		}
 		scanner.close();
 	} // run()
