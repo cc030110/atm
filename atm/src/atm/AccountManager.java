@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class AccountManager {
 	private ArrayList<Account> list;
-	private UserManager userManager = UserManager.getInstance();
+	private UserManager userManager;
 
 	// 1. 생성자 숨기기
 	private AccountManager() {
@@ -24,7 +24,10 @@ public class AccountManager {
 		Account acc = null;
 
 		int accNumber = generateRandomCode();
-		int accPassword = Atm.inputNumber("계좌 비밀번호");
+		int accPassword = Atm.inputNumber("새 계좌 비밀번호");
+		while(accPassword==-1) {
+			accPassword = Atm.inputNumber("새 계좌 비밀번호");
+		}
 
 		// account 객체 생성
 		acc = new Account(user.getUserCode(), accNumber, accPassword);
@@ -39,10 +42,12 @@ public class AccountManager {
 
 	// 계좌 철회(삭제)
 	public void deleteAcc(int log) {
+		userManager=UserManager.getInstance();
 		User user = userManager.getUserByUserCode(log);
-		if (user.getAccs() != null) {
-			// 계좌목록 보여주기
-			userManager.getUserAccList(user);
+		// 해당 유저의 계좌가 비어있지 않다면
+		if (!user.getAccs().isEmpty()) {
+			// 가지고 있는 계좌목록 보여주기
+			viewBalance(log);
 			int selAccNum = Atm.inputNumber("철회할 계좌 번호");
 			Account delAcc = null;
 			for (Account acc : this.list) {
@@ -68,10 +73,20 @@ public class AccountManager {
 	// 모든 계좌 삭제
 	public void deleteAllAcc(User user) {
 		int userCode = user.getUserCode();
+		System.out.println("accountManager.list : "+this.list);
 		for (Account acc : this.list) {
-			if (acc.getUserCode() == userCode)
+			if (acc.getUserCode() == userCode) {
+				System.out.println(acc);
 				this.list.remove(acc);
+			}
 		}
+	}
+	
+	// 회원의 계좌 정보 확인
+	public void viewBalance(int log) {
+		userManager=UserManager.getInstance();
+		User user = userManager.getUserByUserCode(log);
+		userManager.getUserAccList(user);
 	}
 
 	// 계좌번호 랜덤 생성(중복 X)
@@ -92,6 +107,7 @@ public class AccountManager {
 		}
 		return code;
 	}
+	
 
 	// 모든 계좌 리스트 조회
 	public ArrayList<Account> getList() {

@@ -47,8 +47,10 @@ public class UserManager {
 			String password = Atm.scanner.next();
 			User user = getUserByUserCode(log);
 			if (user.getPassword().equals(password)) {
-				this.list.remove(user);
+				System.out.println("accManager : "+accManager);
 				accManager.deleteAllAcc(user);
+				System.out.println("remove user");
+				this.list.remove(user);
 				log = logoutUser();
 				System.out.println("회원탈퇴 완료.");
 			} else {
@@ -105,8 +107,15 @@ public class UserManager {
 	
 	// 유저의 계좌 리스트 출력
 	public void getUserAccList(User user) {
+		ArrayList<Account> accs = user.getAccs();
 		System.out.println("-- 계좌 목록 --");
-		System.out.println(user.getAccs());
+		if(accs.isEmpty()) {
+			System.out.println("(계좌 정보 없음)");
+		}else {
+			for(Account acc : accs) {
+				System.out.println(acc);
+			}
+		}
 	}
 
 	// 유저 리스트 조회

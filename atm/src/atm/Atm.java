@@ -55,6 +55,10 @@ public class Atm {
 		System.out.println("11. 저장");
 		System.out.println("12. 로드");
 		System.out.println("13. 종료");
+		
+		if(loginCheck()) {
+			System.out.println(getLoginUser().getName()+"님 로그인 중");
+		}
 	}
 
 	public static int inputNumber(String msg) {
@@ -96,6 +100,13 @@ public class Atm {
 		return false;
 	}
 	
+	private User getLoginUser() {
+		if(loginCheck()) {
+			return userManager.getUserByUserCode(this.log);
+		}
+		return null;
+	}
+	
 	public void run() {
 		while(true) {
 			printAlldata();	// 검토용
@@ -111,18 +122,24 @@ public class Atm {
 				this.log = userManager.logoutUser();
 			} else if (select == CREATE_ACC) {
 				if (loginCheck()) {
-					accManager.createAccount(userManager.getUserByUserCode(this.log));
-				} else {
-
+					accManager.createAccount(getLoginUser());
+				}else {
+					System.out.println("로그인 후 이용 가능한 서비스입니다.");
 				}
 			} else if (select == DELETE_ACC) {
 				if (loginCheck()) {
 					accManager.deleteAcc(this.log);
+				}else {
+					System.out.println("로그인 후 이용 가능한 서비스입니다.");
 				}
-
+			}else if(select == VIEW_BALANCE) {
+				if(loginCheck()) {
+					System.out.println("accManager : "+accManager);
+					accManager.viewBalance(this.log);
+				}else {
+					System.out.println("로그인 후 이용 가능한 시스템입니다.");
+				}
 			}
-//			else if(select == VIEW_BALANCE)
-//				accManager.viewBalance();
 //			else if(select == INPUT_MONEY)
 //				inputMoney();
 //			else if(select == OUT_MONEY)
