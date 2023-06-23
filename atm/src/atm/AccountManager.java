@@ -38,6 +38,7 @@ public class AccountManager {
 		ArrayList<Account> accs = user.getAccs();
 		accs.add(acc);
 		user.setAccs(accs);
+		
 	}
 
 	// 계좌 철회(삭제)
